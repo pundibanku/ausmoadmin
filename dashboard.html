@@ -4,39 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ausmo Dashboard | Orders</title>
+    <title>Ausmo Pro | Advanced Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --sidebar-w: 260px;
             --primary: #1a4d2e;
             --accent: #d4af37;
-            --bg: #f8f9fa;
+            --bg: #f4f7f6;
+            --white: #ffffff;
         }
 
         body {
             margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: var(--bg);
             display: flex;
+            color: #333;
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 250px;
+            width: var(--sidebar-w);
             background: var(--primary);
             color: white;
             height: 100vh;
             position: fixed;
+            transition: 0.3s;
+            z-index: 100;
         }
 
         .sidebar-header {
             padding: 30px;
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 700;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
         }
 
         .sidebar-header span {
             color: var(--accent);
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
         }
 
         .nav-item {
@@ -46,54 +60,97 @@
             align-items: center;
             gap: 15px;
             transition: 0.3s;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .nav-item:hover,
         .nav-item.active {
             background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid var(--accent);
+            border-left: 5px solid var(--accent);
+            color: var(--accent);
         }
 
-        .main {
-            margin-left: 250px;
+        /* Main */
+        .main-content {
+            margin-left: var(--sidebar-w);
             flex: 1;
             padding: 40px;
+            transition: 0.3s;
         }
 
-        .summary-grid {
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Summary Cards */
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
             margin-bottom: 40px;
         }
 
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        .stat-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #eee;
         }
 
-        .card h3 {
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
             margin: 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #888;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .card .value {
+        .stat-info .value {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #333;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            padding: 0;
+        /* Tables & Lists */
+        .content-box {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .box-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .box-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         table {
@@ -102,53 +159,92 @@
         }
 
         th {
-            background: #fdfdfd;
-            padding: 18px;
+            background: #fafafa;
+            padding: 18px 30px;
             text-align: left;
-            font-size: 0.85rem;
-            color: #777;
-            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         td {
-            padding: 18px;
-            border-bottom: 1px solid #eee;
+            padding: 18px 30px;
+            border-bottom: 1px solid #f0f0f0;
             font-size: 0.9rem;
+            vertical-align: middle;
         }
 
-        .status {
-            padding: 5px 12px;
-            border-radius: 20px;
+        .badge {
+            padding: 6px 14px;
+            border-radius: 50px;
             font-size: 0.75rem;
             font-weight: 600;
         }
 
-        .status-Pending {
-            background: #fff4e5;
-            color: #b76e00;
+        .badge-Pending {
+            background: #fff8e6;
+            color: #d4a017;
         }
 
-        .status-Shipped {
-            background: #e5f6ff;
-            color: #0077b6;
+        .badge-Delivered {
+            background: #e6ffed;
+            color: #2ecc71;
         }
 
-        .status-Delivered {
-            background: #e5ffed;
-            color: #007d2c;
+        .badge-COD {
+            background: #e1f5fe;
+            color: #0288d1;
+        }
+
+        .badge-Online {
+            background: #f3e5f5;
+            color: #8e24aa;
+        }
+
+        .btn-delete {
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            background: none;
+            border: none;
+        }
+
+        .btn-delete:hover {
+            color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .address-box {
+            max-width: 250px;
+            font-style: italic;
+            color: #666;
+            font-size: 0.85rem;
         }
 
         select {
             border: 1px solid #ddd;
-            padding: 6px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             font-size: 0.85rem;
-            outline: none;
+            cursor: pointer;
+            background: #fff;
         }
 
-        @media (max-width: 900px) {
+        /* Section Visibility */
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
             .sidebar {
-                width: 70px;
+                width: 80px;
             }
 
             .sidebar-header,
@@ -156,8 +252,8 @@
                 display: none;
             }
 
-            .main {
-                margin-left: 70px;
+            .main-content {
+                margin-left: 80px;
             }
         }
     </style>
@@ -169,55 +265,135 @@
     </script>
 
     <div class="sidebar">
-        <div class="sidebar-header">AUSMO<span>PORTAL</span></div>
-        <div class="nav-item active"><i class="fas fa-box"></i> <span>Orders</span></div>
-        <div class="nav-item" onclick="localStorage.removeItem('adminAuth'); window.location.href='index.html'"><i
-                class="fas fa-sign-out-alt"></i> <span>Logout</span></div>
+        <div class="sidebar-header">AUSMO<span>PRO</span></div>
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="showSection('orders')"><i class="fas fa-shopping-bag"></i>
+                <span>Orders</span>
+            </li>
+            <li class="nav-item" onclick="showSection('payments')"><i class="fas fa-credit-card"></i> <span>Online
+                    Payments</span></li>
+            <li class="nav-item" onclick="showSection('categories')"><i class="fas fa-tags"></i> <span>Categories</span>
+            </li>
+            <li class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></li>
+        </ul>
     </div>
 
-    <div class="main">
-        <h1>Order Management</h1>
+    <div class="main-content">
+        <div class="header">
+            <h1>Backend Dashboard</h1>
+            <div id="liveClock" style="font-weight: 600; color: var(--primary);"></div>
+        </div>
 
-        <div class="summary-grid">
-            <div class="card">
-                <h3>Total Orders</h3>
-                <div class="value" id="count-total">0</div>
+        <!-- Section: Orders -->
+        <div id="section-orders" class="dashboard-section active">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #2e7d32;"><i class="fas fa-box"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Orders</h3>
+                        <div class="value" id="stats-total">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0; color: #ef6c00;"><i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Pending</h3>
+                        <div class="value" id="stats-pending">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #f3e5f5; color: #7b1fa2;"><i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Online Pay</h3>
+                        <div class="value" id="stats-online">₹0</div>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-                <h3>Pending</h3>
-                <div class="value" id="count-pending" style="color: #b76e00;">0</div>
-            </div>
-            <div class="card">
-                <h3>Delivered</h3>
-                <div class="value" id="count-delivered" style="color: #007d2c;">0</div>
+
+            <div class="content-box">
+                <div class="box-header">
+                    <h2><i class="fas fa-list-ul" style="color: var(--accent);"></i> Customer Orders</h2>
+                    <input type="text" id="orderSearch" placeholder="Search name or phone..."
+                        style="padding: 10px; border-radius: 8px; border: 1px solid #eee; width: 250px;">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Full Address</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Manage</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 50px;">Loading live orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Customer Name</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Manage</th>
-                    </tr>
-                </thead>
-                <tbody id="orderList">
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px;">Loading orders...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Section: Online Payments -->
+        <div id="section-payments" class="dashboard-section">
+            <div class="content-box">
+                <div class="box-header">
+                    <h2><i class="fas fa-check-circle"></i> Online Payment Collections</h2>
+                </div>
+                <div style="padding:30px;">
+                    <p>Total Revenue from Online Orders: <strong id="online-revenue-text"
+                            style="color: var(--primary); font-size: 1.5rem;">₹0</strong></p>
+                    <table style="margin-top:20px;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="onlinePaymentList">
+                            <!-- Filtered list here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Categories -->
+        <div id="section-categories" class="dashboard-section">
+            <div class="content-box">
+                <div class="box-header">
+                    <h2><i class="fas fa-folder-open"></i> Product Categories</h2>
+                </div>
+                <div style="padding: 30px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <input type="text" placeholder="New Category Name" id="newCat"
+                            style="flex:1; padding:12px; border-radius:8px; border:1px solid #ddd;">
+                        <button class="nav-item"
+                            style="background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 8px;"
+                            onclick="addCategory()">Add</button>
+                    </div>
+                    <ul id="catList" style="list-style:none; padding:0;">
+                        <li
+                            style="padding: 15px; background: #f9f9f9; border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                            <span>Ayurvedic Hair Oils</span> <span style="color: grey;">(Default)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBZft0Jw76iRKIxo1U9yt0EcjwlG7bZRAM",
@@ -233,49 +409,114 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const orderList = document.getElementById('orderList');
-        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+        // Sidebar Navigation
+        window.showSection = (section) => {
+            document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('section-' + section).classList.add('active');
+            event.currentTarget.classList.add('active');
+        };
 
+        window.logout = () => { localStorage.removeItem('adminAuth'); window.location.href = 'index.html'; };
+
+        // Real-time Order Listener
+        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             let html = "";
-            let counts = { total: 0, Pending: 0, Shipped: 0, Delivered: 0 };
+            let onlineHtml = "";
+            let stats = { total: 0, pending: 0, onlineSum: 0 };
 
-            snapshot.forEach((doc) => {
-                const order = doc.data();
-                const id = doc.id;
-                counts.total++;
-                counts[order.status || 'Pending']++;
+            snapshot.forEach((docSnap) => {
+                const o = docSnap.data();
+                const id = docSnap.id;
+                stats.total++;
+                if (o.status === 'Pending') stats.pending++;
+                if (o.paymentMethod === 'Online') stats.onlineSum += (o.price || 499);
 
-                const date = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString() : 'N/A';
+                const dateStr = o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : 'N/A';
 
+                // Main Table Row
                 html += `
                     <tr>
-                        <td>${date}</td>
-                        <td><strong>${order.customerName}</strong></td>
-                        <td>${order.phoneNumber}</td>
-                        <td title="${order.address}">${order.address.substring(0, 30)}...</td>
-                        <td><span class="status status-${order.status || 'Pending'}">${order.status || 'Pending'}</span></td>
+                        <td>
+                            <div style="font-weight:600;">${o.customerName}</div>
+                            <div style="font-size:0.75rem; color:#888;">ID: ${id.substring(0, 8)}</div>
+                        </td>
+                        <td>${o.phoneNumber}</td>
+                        <td><div class="address-box">${o.address}</div></td>
+                        <td><span class="badge badge-${o.paymentMethod || 'COD'}">${o.paymentMethod || 'COD'}</span></td>
+                        <td><span class="badge badge-${o.status}">${o.status}</span></td>
                         <td>
                             <select onchange="window.updateStatus('${id}', this.value)">
-                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                                <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                             </select>
+                        </td>
+                        <td>
+                            <button class="btn-delete" title="Delete Order" onclick="window.deleteOrder('${id}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </td>
                     </tr>
                 `;
+
+                // Online Payment List Row
+                if (o.paymentMethod === 'Online') {
+                    onlineHtml += `
+                        <tr>
+                            <td>${dateStr}</td>
+                            <td>${id}</td>
+                            <td>${o.customerName}</td>
+                            <td style="font-weight:700; color:var(--primary);">₹${o.price || 499}</td>
+                        </tr>
+                    `;
+                }
             });
 
-            orderList.innerHTML = html || '<tr><td colspan="6" style="text-align: center;">No orders found yet.</td></tr>';
-            document.getElementById('count-total').innerText = counts.total;
-            document.getElementById('count-pending').innerText = counts.Pending;
-            document.getElementById('count-delivered').innerText = counts.Delivered;
+            document.getElementById('orderTableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;">No orders found.</td></tr>';
+            document.getElementById('onlinePaymentList').innerHTML = onlineHtml || '<tr><td colspan="4" style="text-align:center;">No online payments yet.</td></tr>';
+
+            document.getElementById('stats-total').innerText = stats.total;
+            document.getElementById('stats-pending').innerText = stats.pending;
+            document.getElementById('stats-online').innerText = '₹' + stats.onlineSum;
+            document.getElementById('online-revenue-text').innerText = '₹' + stats.onlineSum;
         });
 
+        // Global Actions
         window.updateStatus = async (id, status) => {
             const ref = doc(db, "orders", id);
             await updateDoc(ref, { status: status });
         };
+
+        window.deleteOrder = async (id) => {
+            if (confirm("Kya aap sach me ye order humesha ke liye delete karna chahte hain?")) {
+                try {
+                    await deleteDoc(doc(db, "orders", id));
+                    alert("Order deleted successfully!");
+                } catch (e) {
+                    alert("Delete karne me error aaya.");
+                }
+            }
+        };
+
+        // Category Modal Logic (Simulation)
+        window.addCategory = () => {
+            const name = document.getElementById('newCat').value.trim();
+            if (!name) return;
+            const li = document.createElement('li');
+            li.style = "padding: 15px; background: #f9f9f9; border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between;";
+            li.innerHTML = `<span>${name}</span> <button style="color:red; background:none; border:none; cursor:pointer;" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
+            document.getElementById('catList').appendChild(li);
+            document.getElementById('newCat').value = "";
+        };
+
+        // Clock Update
+        setInterval(() => {
+            document.getElementById('liveClock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
     </script>
 </body>
 
